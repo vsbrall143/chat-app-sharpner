@@ -41,9 +41,9 @@ sequelize
 .sync()
 .then((result) => {
   // console.log(result);
-  console.log(process.env.DB_PORT);
+ 
   console.log("conndected");
-  app.listen(process.env.DB_PORT);
+  app.listen(3000);
 })
 .catch((err) => {
   console.log(err);
