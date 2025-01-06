@@ -24,7 +24,13 @@ const accessLogStream=fs.createWriteStream(
 app.use(helmet());
 app.use(compression());
  
-app.use(cors())
+app.use(
+  cors({
+    origin:'http://localhost:3000',
+    methods:["GET","POST"],
+    credentials:true
+  })
+)
  
 app.use(bodyParser.json());
 
