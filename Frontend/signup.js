@@ -15,9 +15,8 @@ async function signupForm(event) {
     try {
         const res = await axios.post(`http://localhost:3000/user/signup`, userDetails);
         console.log(res);
+        window.location.href = "home.html";
         alert("Signup successful!");
-        window.location.href = "daily.html";
-
     } catch (error) {
         if (error.response && error.response.data) {
             // Display the error message from the server
@@ -46,6 +45,7 @@ async function loginForm(event) {
         const res = await axios.post(`http://localhost:3000/user/login`, loginDetails);
         console.log(res);
         localStorage.setItem('token',res.data.token);
+        window.location.href = "home.html";
         alert("Logged in successfully!");
         // window.location.href = "daily.html";
     } catch (error) {

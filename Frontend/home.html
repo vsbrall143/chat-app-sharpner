@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #282c34; /* Darker, more sophisticated gray */
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 10px 20px;
+            background-color: #673AB7; /* Vibrant purple */
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-container {
+            display: flex;
+            width: 100%;
+            height: calc(100% - 60px);
+            background: #343a40; /* Slightly lighter gray for contrast */
+        }
+
+        .users-list {
+            width: 30%;
+            background-color: #474b53; /* Darker gray for side panel */
+            border-right: 1px solid #191414;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .users-list .user {
+            padding: 10px;
+            border-bottom: 1px solid #303030;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .users-list .user:hover {
+            background-color: #3c4148; /* Subtle hover effect */
+        }
+
+        .chat-window {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .messages {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            background-color: #343a40; /* Match chat-container background */
+        }
+
+        .message {
+            margin-bottom: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            max-width: 70%;
+        }
+
+        .message.sent {
+            margin-left: auto;
+            background-color: #673AB7; /* Match header color for consistency */
+            color: white; /* Ensure good readability */
+            text-align: right;
+        }
+
+        .message.received {
+            background-color: #E0E0E0; /* Light gray for received messages */
+            color: #343a40; /* Match background for contrast */
+            text-align: left;
+        }
+
+        .send-box {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #303030;
+            background: #343a40; /* Match chat-container background */
+        }
+
+        .send-box input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #474b53; /* Match users-list background */
+            border-radius: 5px;
+            margin-right: 10px;
+            background-color: #303030; /* Slightly darker for better input visibility */
+            color: #E0E0E0; /* Light gray for input text */
+        }
+
+        .send-box button {
+            padding: 10px 20px;
+            background-color: #673AB7; /* Match header and sent messages */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .send-box button:hover {
+            background-color: #5E2B8F; /* Slightly darker purple on hover */
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="logo.png" alt="Chat App Logo">
+        Chat App
+    </div>
+    <div class="chat-container">
+        <div class="users-list" id="users-list">
+            <div class="user">User 1</div>
+            <div class="user">User 2</div>
+            <div class="user">User 3</div>
+        </div>
+        <div class="chat-window">
+            <div class="messages" id="messages">
+                <div class="message received">Hi! How are you?</div>
+                <div class="message sent">I'm good, thanks! You?</div>
+            </div>
+            <div class="send-box">
+                <input type="text" id="message-input" placeholder="Type a message">
+                <button onclick="sendMessage()">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function sendMessage() {
+            const input = document.getElementById('message-input');
+            const message = input.value;
+            if (message.trim()) {
+                const messages = document.getElementById('messages');
+                const messageDiv = document.createElement('div');
+                messageDiv.textContent = message;
+                messageDiv.classList.add('message', 'sent');
+                messages.appendChild(messageDiv);
+                input.value = '';
+                messages.scrollTop = messages.scrollHeight;
+            } else {
+                alert('Please type a message before sending.');
+            }
+        }
+    </script>
+</body>
+</html>
