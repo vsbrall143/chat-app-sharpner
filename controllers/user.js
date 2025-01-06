@@ -51,4 +51,29 @@ const { Op, Transaction } = require('sequelize'); // Import Op for comparison op
 };
 
 
-  
+exports.postlogin = async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if the user exists in the database
+    const user = await signup.findOne({ where: { email } });
+
+    if (!user) {
+      return res.status(404).json({ message: "User does not exist" });
+    }
+
+    // Validate password using bcrypt
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (isMatch) {
+      return res.status(200).json({ success: true, message: "User logged in successfully" ,token:generateAccessToken(user.email)});
+    } else {
+      return res.status(400).json({ success: false, message: "Password is incorrect" });
+    }
+
+  } catch (error) {
+    console.error("Error during login:", error);
+    res.status(500).json({ message: "An error occurred during login." });
+  }   
+};
+
+

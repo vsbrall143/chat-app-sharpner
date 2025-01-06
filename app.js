@@ -24,9 +24,9 @@ const accessLogStream=fs.createWriteStream(
 app.use(helmet());
 app.use(compression());
  
-app.use(
+app.use( 
   cors({
-    origin:'http://localhost:3000',
+    origin:'http://127.0.0.1:5501',
     methods:["GET","POST"],
     credentials:true
   })
@@ -38,10 +38,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(userroutes);
-
- 
-
- 
 
 sequelize
 .sync()

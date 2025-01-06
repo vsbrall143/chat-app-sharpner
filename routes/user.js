@@ -14,7 +14,7 @@ const auth= require('../middleware/auth')
  
 router.post('/user/signup', adminController.postsignup)
 
- 
+router.post('/user/login', adminController.postlogin)
 
 
 
