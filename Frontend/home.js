@@ -97,5 +97,5 @@ async function loadMessages() {
     }
   }
   
-
+  setInterval(loadMessages, 1000);
   window.onload = loadMessages;
