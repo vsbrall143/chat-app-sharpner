@@ -4,7 +4,7 @@ const jwt=require('jsonwebtoken');
 const sequelize=require('../util/database'); 
 const { BlobServiceClient } = require('@azure/storage-blob');
 const { v1: uuidv1} = require('uuid');
-
+const { Op } = require('sequelize'); 
 
 const Message = require('../models/message');  
 
@@ -34,14 +34,22 @@ async function sendMessage(req, res, next) {
 }
 
  
-
-// Controller function to fetch all messages
+// Controller function to fetch messages
 async function getMessages(req, res, next) {
   try {
-    // Fetch all messages from the database
-    const messages = await Message.findAll(); // Sequelize method to fetch all messages
+    const lastMessageId = req.query.lastMessageId || 0;
+    console.log(lastMessageId);
+    // Fetch only messages with ID greater than `lastMessageId`
+    const messages = await Message.findAll({
+      where: {
+        id: {
+          [Op.gt]: lastMessageId    //gt means greater then
+          // Use Sequelize operator for comparison 
+        }
+      },
+      order: [['id', 'ASC']] // Ensure messages are ordered by ID
+    });
 
-    // Send the messages as the response
     res.status(200).json({ messages: messages });
   } catch (error) {
     console.error('Error while fetching messages:', error);

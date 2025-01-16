@@ -53,49 +53,76 @@ async function sendMessage() {
 
 
 
+// Helper function to update local storage
+function updateLocalStorage(newMessages) {
+  const storedMessages = JSON.parse(localStorage.getItem('messages')) || [];
+  
+  // Add new messages and remove duplicates
+  const allMessages = [...storedMessages, ...newMessages];
+  const uniqueMessages = Array.from(new Map(allMessages.map(msg => [msg.id, msg])).values()); //This effectively removes duplicate messages based on their id.
 
+  // Keep only the recent 10 messages
+  const recentMessages = uniqueMessages.slice(-10);
+
+  // Save back to local storage
+  localStorage.setItem('messages', JSON.stringify(recentMessages));
+}
+
+// Helper function to display messages on the frontend
+function displayMessages(messages) {
+  const messagesContainer = document.getElementById('messages');
+
+  // Clear existing messages
+  messagesContainer.innerHTML = '';
+
+  // Append messages to the container
+  messages.forEach(message => {
+    const messageDiv = document.createElement('div');
+    messageDiv.classList.add('message', 'received');
+    
+    // Create the email and message content
+    const emailContent = document.createElement('div');
+    emailContent.textContent = `From: ${message.email}`;
+    const messageContent = document.createElement('div');
+    messageContent.textContent = message.message;
+
+    // Append the email and message content
+    messageDiv.appendChild(emailContent);
+    messageDiv.appendChild(messageContent);
+
+    // Append to the container
+    messagesContainer.appendChild(messageDiv);
+  });
+}
+
+
+// Load messages on page load
 async function loadMessages() {
-    try {
-      // Send a GET request to fetch all messages
-      const res = await axios.get('http://localhost:3000/messages', {
-        headers: {
-          "Authorization": localStorage.getItem('token') // Send token if necessary for authentication
-        }
-      });
-  
-      // Get the messages from the response
-      const messages = res.data.messages;
-  
-      // Get the container where messages will be displayed
-      const messagesContainer = document.getElementById('messages');
-      
-      // Clear any existing messages
-      messagesContainer.innerHTML = '';
-  
-      // Loop through the messages and display each one
-      messages.forEach(message => {
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message', 'received');
-        
-        // Create the email and message content
-        const messageContent = document.createElement('div');
-        messageContent.textContent = message.message; // Message content
-  
-        const emailContent = document.createElement('div');
-        emailContent.textContent = `From: ${message.email}`; // Display email
-  
-        // Append the email and message content
-        messageDiv.appendChild(emailContent);
-        messageDiv.appendChild(messageContent);
-  
-        // Append the message div to the container
-        messagesContainer.appendChild(messageDiv);
-      });
-    } catch (error) {
-      console.error('Error fetching messages:', error);
-      alert('Failed to load messages. Please try again later.');
+  try {
+    // Fetch stored messages from local storage
+    const storedMessages = JSON.parse(localStorage.getItem('messages')) || [];
+    displayMessages(storedMessages);
+
+    // Fetch new messages from the backend
+    const lastMessageId = storedMessages.length ? storedMessages[storedMessages.length - 1].id : 0;
+    const res = await axios.get(`http://localhost:3000/messages?lastMessageId=${lastMessageId}`, {
+      headers: {
+        "Authorization": localStorage.getItem('token')
+      }
+    });
+
+    // Update local storage with new messages
+    const newMessages = res.data.messages;
+    if (newMessages.length) {
+      updateLocalStorage(newMessages);
+      displayMessages([...storedMessages, ...newMessages].slice(-10));  //This line merges storedMessages and newMessages into one array, takes only the last 10 messages from it using .slice(-10), and displays them on the frontend.
     }
+  } catch (error) {
+    console.error('Error fetching messages:', error);
+    alert('Failed to load messages. Please try again later.');
   }
-  
-  setInterval(loadMessages, 1000);
-  window.onload = loadMessages;
+}
+
+// Reload messages every second
+setInterval(loadMessages, 50000);
+window.onload = loadMessages;
