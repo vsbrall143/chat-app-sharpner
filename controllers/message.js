@@ -5,59 +5,44 @@ const sequelize=require('../util/database');
 const { BlobServiceClient } = require('@azure/storage-blob');
 const { v1: uuidv1} = require('uuid');
 const { Op } = require('sequelize'); 
-
+const User = require('../models/User.js');
 const Message = require('../models/message');  
 
- 
-async function sendMessage(req, res, next) {
+  // Route: POST /groups/:groupId/messages
+exports.sendMessage = async (req, res) => {
   try {
- 
-    const { message } = req.body;
-    const email = req.user.email;
+      const { groupId } = req.params;
+      const { message } = req.body;
+      const userId = req.user.id; // Assume user ID is set by the `auth` middleware
 
-    if ( !email || !message) {
-      return res.status(400).json({ message: 'Please provide username, email, and message.' });
-    }
+      // Create the message in the database
+      const newMessage = await Message.create({ groupId, userId, message });
 
-    // Create the new message in the database
-    const newMessage = await Message.create({
-      email,
-      message,
-    });
-
-    // Send success response with the newly created message
-    res.status(201).json({ message: 'Message sent successfully', data: newMessage });
+      res.status(201).json({ message: 'Message sent', data: newMessage });
   } catch (error) {
-    console.error('Error while saving the message:', error);
-    res.status(500).json({ message: 'Internal server error. Please try again later.' });
+      console.error('Error sending message:', error);
+      res.status(500).json({ message: 'Failed to send message' });
   }
-}
+};
 
- 
-// Controller function to fetch messages
-async function getMessages(req, res, next) {
+ // Route: GET /groups/:groupId/messages
+exports.getMessages = async (req, res) => {
   try {
-    const lastMessageId = req.query.lastMessageId || 0;
-    console.log(lastMessageId);
-    // Fetch only messages with ID greater than `lastMessageId`
-    const messages = await Message.findAll({
-      where: {
-        id: {
-          [Op.gt]: lastMessageId    //gt means greater then
-          // Use Sequelize operator for comparison 
-        }
-      },
-      order: [['id', 'ASC']] // Ensure messages are ordered by ID
-    });
+      const { groupId } = req.params;
 
-    res.status(200).json({ messages: messages });
+      // Fetch messages for the group
+      const messages = await Message.findAll({
+          where: { groupId },
+          include: [{ model: User, attributes: ['username'] }], // Include sender's username
+          order: [['createdAt', 'ASC']] // Sort by oldest first
+      });
+
+      res.status(200).json({ messages });
   } catch (error) {
-    console.error('Error while fetching messages:', error);
-    res.status(500).json({ message: 'Internal server error while fetching messages.' });
+      console.error('Error fetching messages:', error);
+      res.status(500).json({ message: 'Failed to fetch messages' });
   }
-}
-
-module.exports = { sendMessage, getMessages }; // Export the function
+};
 
 
  

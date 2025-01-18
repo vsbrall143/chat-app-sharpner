@@ -2,171 +2,54 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chat App</title>
- 
-<!-- Notyf CSS -->
-<link href="https://cdn.jsdelivr.net/npm/notyf@3.10.0/notyf.min.css" rel="stylesheet">
-
-<!-- Notyf JS -->
-<script src="https://cdn.jsdelivr.net/npm/notyf@3.10.0/notyf.min.js"></script>
-
-
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        padding: 0;
-        background-color: #282c34; /* Darker, more sophisticated gray */
-        height: 100vh;
-        overflow: hidden;
-      }
-
-      .header {
-        display: flex;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: #673ab7; /* Vibrant purple */
-        color: white;
-        font-size: 1.5rem;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      }
-
-      .chat-container {
-        display: flex;
-        width: 100%;
-        height: calc(100% - 60px);
-        background: #343a40; /* Slightly lighter gray for contrast */
-      }
-
-      .users-list {
-        width: 30%;
-        background-color: #474b53; /* Darker gray for side panel */
-        border-right: 1px solid #191414;
-        padding: 10px;
-        overflow-y: auto;
-      }
-
-      .users-list .user {
-        padding: 10px;
-        border-bottom: 1px solid #303030;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-
-      .users-list .user:hover {
-        background-color: #3c4148; /* Subtle hover effect */
-      }
-
-      .chat-window {
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-      }
-
-      .messages {
-        flex: 1;
-        padding: 10px;
-        overflow-y: auto;
-        background-color: #343a40; /* Match chat-container background */
-      }
-
-      .message {
-        margin-bottom: 10px;
-        padding: 10px;
-        border-radius: 5px;
-        max-width: 70%;
-      }
-
-      .message.sent {
-        margin-left: auto;
-        background-color: #673ab7; /* Match header color for consistency */
-        color: white; /* Ensure good readability */
-        text-align: right;
-      }
-
-      .message.received {
-        background-color: #e0e0e0; /* Light gray for received messages */
-        color: #343a40; /* Match background for contrast */
-        text-align: left;
-      }
-
-      .send-box {
-        display: flex;
-        padding: 10px;
-        border-top: 1px solid #303030;
-        background: #343a40; /* Match chat-container background */
-      }
-
-      .send-box input[type="text"] {
-        flex: 1;
-        padding: 10px;
-        border: 1px solid #474b53; /* Match users-list background */
-        border-radius: 5px;
-        margin-right: 10px;
-        background-color: #303030; /* Slightly darker for better input visibility */
-        color: #e0e0e0; /* Light gray for input text */
-      }
-
-      .send-box button {
-        padding: 10px 20px;
-        background-color: #673ab7; /* Match header and sent messages */
-        color: white;
-        border: none;
-        border-radius: 5px;
-        cursor: pointer;
-        transition: background-color 0.3s;
-      }
-
-      .send-box button:hover {
-        background-color: #5e2b8f; /* Slightly darker purple on hover */
-      }
-
-
-      #logout-link {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  text-decoration: none; /* Remove underline */
-}
-
-#logout-button {
-  padding: 7px 7px;
-  background-color: #341066; /* Orange color for the button */
-  color: rgb(18, 60, 198);
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s ease;
-}
-
-#logout-button:hover {
-  background-color: #4509a7; /* Darker orange on hover */
-}
-
-    </style>
+    <title>Chat - Chat App</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="js/home.js" defer></script>
   </head>
   <body>
+    <!-- Header Section -->
     <div class="header">
-      <!-- <img src="logo.png" alt="Chat App Logo" /> -->
       Chat App
-      <a href="login.html" id="logout-link">
-        <div id="logout-button">Logout</div>
-      </a>
+      <button id="logout-button" onclick="logout()">Logout</button>
+      <button id="create-group-button" onclick="showCreateGroupModal()">Create Group</button>
     </div>
+
+    <!-- Chat Container -->
     <div class="chat-container">
-      <div class="users-list" id="users-list">
-            <div class="user">User 1</div>
-            <div class="user">User 2</div>
-            <div class="user">User 3</div>
+      <!-- Group List -->
+      <div class="pending-invites" id="pending-invites">
+        <h3>Pending Invitations</h3>
+        <!-- Dynamic list of invitations will be added here -->
+      </div>
+
+      <div class="groups" id="groups">
+        <!-- Dynamic group list will be appended here -->
+        <!-- Example group with an invite button -->
+        <div class="group" id="group-1">
+          Group Name
+          <button onclick="showInviteModal(1)">Invite</button>
+          <!-- Pass group ID dynamically -->
         </div>
+      </div>
+
+      <!-- Chat Window -->
       <div class="chat-window">
-        <div class="messages" id="messages">
-          <div class="message received">Hi! How are you?</div>
-          <div class="message sent">I'm good, thanks! You?</div>
+        <!-- Group Members Section -->
+        <div id="group-members" class="group-members">
+          <h3>Group Members</h3>
+          <ul id="members-list">
+            <!-- List of group members will be dynamically populated here -->
+          </ul>
         </div>
+
+        <!-- Messages Section -->
+        <div class="messages" id="messages">
+          <!-- Dynamic messages will be appended here -->
+        </div>
+
+        <!-- Send Box -->
         <div class="send-box">
           <input type="text" id="message-input" placeholder="Type a message" />
           <button onclick="sendMessage()">Send</button>
@@ -174,7 +57,33 @@
       </div>
     </div>
 
+    <!-- Modal for Inviting Members -->
+    <div id="invite-modal" class="modal" style="display: none">
+      <div class="modal-content">
+        <span class="close" onclick="closeInviteModal()">&times;</span>
+        <h3>Invite to Group</h3>
+        <input
+          type="email"
+          id="invite-email-input"
+          placeholder="Enter user's email"
+        />
+        <button onclick="inviteToGroup()">Send Invite</button>
+      </div>
+    </div>
+
+    <!-- Modal for Group Creation -->
+    <div id="create-group-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <span class="close" onclick="closeCreateGroupModal()">&times;</span>
+        <h3>Create Group</h3>
+        <input type="text" id="group-name-input" placeholder="Enter group name" />
+        <button onclick="createGroup()">Create</button>
+      </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="home.js"></script>
+ 
   </body>
 </html>
+

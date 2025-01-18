@@ -1,27 +1,32 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../util/database');
 
-const message = sequelize.define('message', {
+const user = sequelize.define('user', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
     allowNull: false,
     primaryKey: true,
   },
-  groupId: {
-    type: Sequelize.INTEGER,
+  username: {
+    type: Sequelize.STRING,
     allowNull: false,
   },
-  userId: {
-    type: Sequelize.INTEGER,
+  email: {
+    type: Sequelize.STRING,
+    unique: true,
     allowNull: false,
   },
-  message: {
-    type: Sequelize.TEXT,
+  password: {
+    type: Sequelize.STRING,
     allowNull: false,
+  },
+  phone: {
+    type: Sequelize.STRING,
+    allowNull: true,
   },
 }, {
-  timestamps: true, // Automatically adds `createdAt` for when the message was sent
+  timestamps: true,
 });
 
-module.exports = message;
+module.exports = user;

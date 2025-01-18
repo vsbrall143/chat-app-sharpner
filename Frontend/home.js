@@ -1,128 +1,264 @@
-const notyf = new Notyf();
+let currentGroupId; // Track the selected group ID
 
-async function sendMessage() {
-    const input = document.getElementById('message-input');
-    const message = input.value;
-
-    if (message.trim()) {
-        const messages = document.getElementById('messages');
-        const messageDiv = document.createElement('div');
-        messageDiv.textContent = message;
-        messageDiv.classList.add('message', 'sent');
-        messages.appendChild(messageDiv);
-        
-        // Clear the input field
-        input.value = '';
-        messages.scrollTop = messages.scrollHeight;
-
-        // Get the token from local storage
-        const token = localStorage.getItem('token');
-        if (!token) {
-            alert('You are not logged in.');
-            return;
-        }
-
-        const messageDetails = {
-            message: message,
-        };
-
-        try {
-            const token= localStorage.getItem('token');
-            console.log(token);
-            const res = await axios.post('http://localhost:3000/messages',messageDetails, {headers:{"Authorization" : token}})
-            console.log(res);
-            notyf.success('Message sent successfully!');
-
-
-        } catch (error) {
-            if (error.response && error.response.data) {
- 
-                alert(error.response.data.message);
-            } else {
-                notyf.error('Error sending message. Please try again.');
-            }
-            console.error("Error during message sending:", error);
-        }
-    } else {
-        notyf.warning('Please type a message before sending.');
-    }
-}
-
-
-
-
-
-
-// Helper function to update local storage
-function updateLocalStorage(newMessages) {
-  const storedMessages = JSON.parse(localStorage.getItem('messages')) || [];
-  
-  // Add new messages and remove duplicates
-  const allMessages = [...storedMessages, ...newMessages];
-  const uniqueMessages = Array.from(new Map(allMessages.map(msg => [msg.id, msg])).values()); //This effectively removes duplicate messages based on their id.
-
-  // Keep only the recent 10 messages
-  const recentMessages = uniqueMessages.slice(-10);
-
-  // Save back to local storage
-  localStorage.setItem('messages', JSON.stringify(recentMessages));
-}
-
-// Helper function to display messages on the frontend
-function displayMessages(messages) {
-  const messagesContainer = document.getElementById('messages');
-
-  // Clear existing messages
-  messagesContainer.innerHTML = '';
-
-  // Append messages to the container
-  messages.forEach(message => {
-    const messageDiv = document.createElement('div');
-    messageDiv.classList.add('message', 'received');
-    
-    // Create the email and message content
-    const emailContent = document.createElement('div');
-    emailContent.textContent = `From: ${message.email}`;
-    const messageContent = document.createElement('div');
-    messageContent.textContent = message.message;
-
-    // Append the email and message content
-    messageDiv.appendChild(emailContent);
-    messageDiv.appendChild(messageContent);
-
-    // Append to the container
-    messagesContainer.appendChild(messageDiv);
-  });
-}
-
-
-// Load messages on page load
-async function loadMessages() {
+async function loadGroups() {
+  const token = localStorage.getItem('token');
   try {
-    // Fetch stored messages from local storage
-    const storedMessages = JSON.parse(localStorage.getItem('messages')) || [];
-    displayMessages(storedMessages);
-
-    // Fetch new messages from the backend
-    const lastMessageId = storedMessages.length ? storedMessages[storedMessages.length - 1].id : 0;
-    const res = await axios.get(`http://localhost:3000/messages?lastMessageId=${lastMessageId}`, {
-      headers: {
-        "Authorization": localStorage.getItem('token')
-      }
-    });
-
-    // Update local storage with new messages
-    const newMessages = res.data.messages;
-    if (newMessages.length) {
-      updateLocalStorage(newMessages);
-      displayMessages([...storedMessages, ...newMessages].slice(-10));  //This line merges storedMessages and newMessages into one array, takes only the last 10 messages from it using .slice(-10), and displays them on the frontend.
-    }
+      const res = await axios.get('http://localhost:3000/groups', { headers: { Authorization: token } });
+      const groupsContainer = document.getElementById('groups');
+      groupsContainer.innerHTML = '';
+      res.data.groups.forEach(group => {
+          const groupDiv = document.createElement('div');
+          groupDiv.classList.add('group');
+          groupDiv.textContent = group.name;
+          groupDiv.onclick = () => loadMessages(group.id);
+          groupsContainer.appendChild(groupDiv);
+      });
   } catch (error) {
-    console.error('Error fetching messages:', error);
-    alert('Failed to load messages. Please try again later.');
+      alert('Error loading groups.');
   }
 }
 
-// Reload messages every second
-setInterval(loadMessages, 50000);
-window.onload = loadMessages;
+window.onload(loadGroups());
+
+// Load messages for the selected group
+async function loadMessages(groupId) {
+  currentGroupId = groupId; // Update the current group ID
+
+  const token = localStorage.getItem('token');
+  try {
+      const res = await axios.get(`http://localhost:3000/groups/${groupId}/messages`, {
+          headers: { Authorization: token }
+      });
+
+      const messagesContainer = document.getElementById('messages');
+      messagesContainer.innerHTML = ''; // Clear existing messages
+
+      res.data.messages.forEach(msg => {
+          const msgDiv = document.createElement('div');
+          msgDiv.classList.add('message', msg.userId === res.data.userId ? 'sent' : 'received');
+          msgDiv.textContent = msg.message;
+          messagesContainer.appendChild(msgDiv);
+      });
+
+      messagesContainer.scrollTop = messagesContainer.scrollHeight; // Scroll to the latest message
+  } catch (error) {
+      console.error('Error loading messages:', error);
+      alert('Failed to load messages. Please try again.');
+  }
+}
+
+
+// async function sendMessage() {
+//   const message = document.getElementById('message-input').value.trim();
+//   const groupId = 1; // Replace with dynamic group ID
+//   const token = localStorage.getItem('token');
+//   if (!message) return;
+//   try {
+//       await axios.post(`http://localhost:3000/groups/${groupId}/messages`, { message }, { headers: { Authorization: token } });
+//       document.getElementById('message-input').value = '';
+//       loadMessages(groupId);
+//   } catch (error) {
+//       alert('Error sending message.');
+//   }
+// }
+
+function logout() {
+  localStorage.removeItem('token');
+  window.location.href = 'index.html';
+}
+
+
+// Show the "Create Group" modal
+function showCreateGroupModal() {
+  document.getElementById('create-group-modal').style.display = 'block';
+}
+
+// Close the "Create Group" modal
+function closeCreateGroupModal() {
+  document.getElementById('create-group-modal').style.display = 'none';
+}
+
+// Create a new group
+async function createGroup() {
+  const groupName = document.getElementById("group-name-input").value.trim();
+  const token = localStorage.getItem("token");
+
+  if (!groupName) {
+      alert("Please enter a group name.");
+      return;
+  }
+
+  try {
+      const res = await axios.post(
+          "http://localhost:3000/groups/create",
+          { name: groupName },
+          { headers: { Authorization: token } }
+      );
+      alert("Group created successfully!");
+      loadGroups(); // Reload group list
+      closeCreateGroupModal(); // Close modal after group creation
+  } catch (error) {
+      console.error("Error creating group:", error);
+      alert("Failed to create group.");
+  }
+}
+
+
+let selectedGroupId; // Store the current group ID for which the invite is being sent
+
+// Show the "Invite to Group" modal
+function showInviteModal(groupId) {
+    selectedGroupId = groupId; // Store the group ID
+    document.getElementById('invite-modal').style.display = 'block';
+}
+
+// Close the "Invite to Group" modal
+function closeInviteModal() {
+    document.getElementById('invite-modal').style.display = 'none';
+    selectedGroupId = null; // Reset the group ID
+}
+
+// Send an invitation to a user
+async function inviteToGroup() {
+    const email = document.getElementById('invite-email-input').value.trim();
+    if (!email) {
+        alert('Please enter an email address.');
+        return;
+    }
+
+    const token = localStorage.getItem('token');
+    try {
+        await axios.post(`http://localhost:3000/groups/${selectedGroupId}/invite`, { email }, {
+            headers: { Authorization: token }
+        });
+        alert('User invited successfully!');
+        closeInviteModal();
+    } catch (error) {
+        console.error('Error inviting user:', error);
+        alert('Failed to invite user. Please try again.');
+    }
+}
+
+
+
+// Send a message in the current group
+async function sendMessage() {
+    const message = document.getElementById('message-input').value.trim();
+    if (!message) {
+        alert('Please enter a message.');
+        return;
+    }
+
+    const token = localStorage.getItem('token');
+    try {
+        await axios.post(`http://localhost:3000/groups/${currentGroupId}/messages`, { message }, {
+            headers: { Authorization: token }
+        });
+        document.getElementById('message-input').value = ''; // Clear the input
+        loadMessages(currentGroupId); // Reload messages
+    } catch (error) {
+        console.error('Error sending message:', error);
+        alert('Failed to send message. Please try again.');
+    }
+}
+
+// Load pending invitations
+async function loadPendingInvites() {
+  const token = localStorage.getItem('token');
+  try {
+      const res = await axios.get('http://localhost:3000/groups/pending-invites', {
+          headers: { Authorization: token }
+      });
+
+      const pendingInvitesContainer = document.getElementById('pending-invites');
+      pendingInvitesContainer.innerHTML = '<h3>Pending Invitations</h3>'; // Clear existing invites and add header
+
+      res.data.invites.forEach(invite => {
+          const inviteDiv = document.createElement('div');
+          inviteDiv.classList.add('invite');
+          inviteDiv.innerHTML = `
+              ${invite.groupName}
+              <div>
+                  <button class="accept" onclick="acceptInvite(${invite.groupId})">Accept</button>
+                  <button class="decline" onclick="declineInvite(${invite.groupId})">Decline</button>
+              </div>
+          `;
+          pendingInvitesContainer.appendChild(inviteDiv);
+      });
+  } catch (error) {
+      console.error('Error fetching pending invites:', error);
+      alert('Failed to load pending invitations.');
+  }
+}
+
+// Accept an invitation
+async function acceptInvite(groupId) {
+  const token = localStorage.getItem('token');
+  try {
+      await axios.post(`http://localhost:3000/groups/${groupId}/accept-invite`, {}, {
+          headers: { Authorization: token }
+      });
+      alert('Successfully joined the group!');
+      loadPendingInvites(); // Reload pending invites
+      loadGroups(); // Reload group list
+  } catch (error) {
+      console.error('Error accepting invite:', error);
+      alert('Failed to accept invitation.');
+  }
+}
+
+// Decline an invitation
+async function declineInvite(groupId) {
+  const token = localStorage.getItem('token');
+  try {
+      await axios.post(`http://localhost:3000/groups/${groupId}/decline-invite`, {}, {
+          headers: { Authorization: token }
+      });
+      alert('Invitation declined.');
+      loadPendingInvites(); // Reload pending invites
+  } catch (error) {
+      console.error('Error declining invite:', error);
+      alert('Failed to decline invitation.');
+  }
+}
+
+// Call this function on page load to show pending invitations
+loadPendingInvites();
+
+
+async function loadGroupMembers(groupId) {
+  const token = localStorage.getItem('token');
+  try {
+      const res = await axios.get(`http://localhost:3000/groups/${groupId}/members`, {
+          headers: { Authorization: token },
+      });
+
+      const membersList = document.getElementById('members-list');
+      membersList.innerHTML = ''; // Clear existing list
+
+      res.data.members.forEach(member => {
+          const memberItem = document.createElement('li');
+          memberItem.textContent = member.username;
+
+          // Mark the admin
+          if (member.role === 'admin') {
+              memberItem.classList.add('admin');
+          }
+
+          membersList.appendChild(memberItem);
+      });
+  } catch (error) {
+      console.error('Error loading group members:', error);
+      alert('Failed to load group members.');
+  }
+}
+
+
+function showCreateGroupModal() {
+  document.getElementById("create-group-modal").style.display = "block";
+}
+
+// Close Create Group Modal
+function closeCreateGroupModal() {
+  document.getElementById("create-group-modal").style.display = "none";
+}

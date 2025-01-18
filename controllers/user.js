@@ -1,5 +1,7 @@
- 
-const signup=require('../models/SignupUser')
+const Group = require('../models/group');
+const Message = require('../models/message');  
+const GroupMember = require('../models/groupMember');
+const User = require('../models/User.js');
 const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken');
 // const { Op } = require('sequelize');
@@ -7,73 +9,101 @@ const sequelize=require('../util/database');
 const { BlobServiceClient } = require('@azure/storage-blob');
 const { v1: uuidv1} = require('uuid');
 
-
- 
- 
- 
-
-
 const { Op, Transaction } = require('sequelize'); // Import Op for comparison operators
  
- 
-
  function generateAccessToken(email){
   return jwt.sign({email:email}, '8hy98h9yu89y98yn89y98y89')
  }
 
- 
-
-
- exports.postsignup = async (req, res, next) => {
+ exports.postLogin = async (req, res) => {
   try {
-    console.log("Handling signup request...");
-    console.log(req.body);
+    const { email, password } = req.body;
 
-    const { username, email, password,phone } = req.body;
-
-    // Check if the email already exists
-    const existingUser = await signup.findOne({ where: { email} });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists with this email." });
+    // Find the user by email
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'User not found' });
     }
 
-    bcrypt.hash(password,10,async (err,hash) => {     //10 is for salt rounds more making passwo rd more unique
-      console.log(err);
-      await signup.create({username,email,password:hash,phone})
-      res.status(201).json({message:'sucessfully created new user'})
-    })
+    // Check if the password matches
+    const isPasswordValid = await bcrypt.compare(password, user.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ success: false, message: 'Invalid password' });
+    }
 
-  
-  } catch (error) {
-    console.error("Error during signup:", error);
-    res.status(500).json({ message: "An error occurred during signup." });
+    // Generate a JWT token
+    const token = jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET || 'default_secret', {
+      expiresIn: '1h',
+    });
+
+    res.status(200).json({ success: true, message: 'Login successful', token });
+  } catch (err) {
+    console.error('Error during login:', err);
+    res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
 
 
-exports.postlogin = async (req, res, next) => {
+ 
+
+exports.postSignup = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { username, email, password } = req.body;
 
-    // Check if the user exists in the database
-    const user = await signup.findOne({ where: { email } });
-
-    if (!user) {
-      return res.status(404).json({ message: "User does not exist" });
+    // Check if the user already exists
+    const existingUser = await User.findOne({ where: { email } });
+    if (existingUser) {
+      return res.status(400).json({ success: false, message: 'User already exists' });
     }
 
-    // Validate password using bcrypt
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (isMatch) {
-      return res.status(200).json({ success: true, message: "User logged in successfully" ,token:generateAccessToken(user.email)});
-    } else {
-      return res.status(400).json({ success: false, message: "Password is incorrect" });
-    }
+    // Hash the password
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  } catch (error) {
-    console.error("Error during login:", error);
-    res.status(500).json({ message: "An error occurred during login." });
-  }   
+    // Create the user
+    const newUser = await User.create({
+      username,
+      email,
+      password: hashedPassword,
+    });
+
+    res.status(201).json({ success: true, message: 'User registered successfully', userId: newUser.id });
+  } catch (err) {
+    console.error('Error during signup:', err);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
 };
 
 
+
+
+exports.inviteUser = async (req, res,next) => {
+  try {
+    console.log("hello");
+    const { email } = req.body;
+    const { groupId } = req.params;
+
+    // Find the user to be invited
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Check if the user is already in the group
+    const existingMember = await GroupMember.findOne({ where: { groupId, userId: user.id } });
+    if (existingMember) {
+      return res.status(400).json({ success: false, message: 'User already in the group' });
+    }
+
+    // Add the user as a group member
+    await GroupMember.create({
+      groupId,
+      userId: user.id,
+      role: 'member',
+    });
+
+    res.status(200).json({ success: true, message: 'User invited successfully' });
+  } catch (err) {
+    console.error('Error inviting user:', err);
+    res.status(500).json({ success: false, message: 'Internal server error' });
+  }
+};

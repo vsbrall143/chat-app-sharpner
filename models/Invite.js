@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../util/database');
 
-const message = sequelize.define('message', {
+const invite = sequelize.define('invite', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -16,12 +16,13 @@ const message = sequelize.define('message', {
     type: Sequelize.INTEGER,
     allowNull: false,
   },
-  message: {
-    type: Sequelize.TEXT,
+  status: {
+    type: Sequelize.ENUM('pending', 'accepted', 'declined'),
     allowNull: false,
+    defaultValue: 'pending',
   },
 }, {
-  timestamps: true, // Automatically adds `createdAt` for when the message was sent
+  timestamps: true,
 });
 
-module.exports = message;
+module.exports = invite;

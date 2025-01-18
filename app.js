@@ -4,10 +4,7 @@ require('dotenv').config(); // Load environment variables from .env file
 const express = require('express');
 const bodyParser = require('body-parser');
 const sequelize=require('./util/database'); 
- 
- 
-const User=require('./models/SignupUser')
- 
+
 const userroutes = require('./routes/user');
 const compression=require('compression')
 const helmet=require('helmet');
@@ -38,6 +35,33 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(userroutes);
+
+
+
+
+
+ 
+const User = require('./models/user');
+const Group = require('./models/group');
+const GroupMember = require('./models/groupMember');
+const Message = require('./models/message');
+
+ 
+
+// Define associations between models
+Group.hasMany(GroupMember, { foreignKey: 'groupId' });
+GroupMember.belongsTo(Group, { foreignKey: 'groupId' });
+
+User.hasMany(GroupMember, { foreignKey: 'userId' });
+GroupMember.belongsTo(User, { foreignKey: 'userId' });
+
+Group.hasMany(Message, { foreignKey: 'groupId' });
+Message.belongsTo(Group, { foreignKey: 'groupId' });
+
+User.hasMany(Message, { foreignKey: 'userId' });
+Message.belongsTo(User, { foreignKey: 'userId' });
+
+
 
 sequelize
 .sync()

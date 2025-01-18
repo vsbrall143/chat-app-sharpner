@@ -1,23 +1,32 @@
 const jwt = require('jsonwebtoken');
-const User = require('../models/SignupUser');
+const User = require('../models/User.js');
 
- 
-const au = (req, res, next) => {
-    try{
-        const token=req.header('Authorization');
-        console.log(token);
-        const user=jwt.verify(token,'8hy98h9yu89y98yn89y98y89');
-        console.log('userID >>>',user.email)
-        User.findByPk(user.email).then(user=>{
-            console.log(user);
-            req.user=user;
-            next();
-        })
-    }catch(err){
-        console.log(err);
-        return res.status(401).json({sucess:false});
-
+const au = async (req, res, next) => {
+  try {
+    const token = req.header('Authorization');
+    if (!token) {
+      return res.status(401).json({ success: false, message: 'Token not provided' });
     }
-}
 
-module.exports = {au};
+    console.log(`Token received: ${token}`);
+
+    // Verify the token
+    const decodedUser = jwt.verify(token, process.env.JWT_SECRET || 'default_secret');
+    console.log('Decoded User:', decodedUser);
+
+    // Fetch the user from the database using email
+    const user = await User.findOne({ where: { email: decodedUser.email } });
+    if (!user) {
+      return res.status(401).json({ success: false, message: 'Invalid token: User not found' });
+    }
+
+    // Attach the user to the request object
+    req.user = user;
+    next();
+  } catch (err) {
+    console.error('Authentication Error:', err);
+    return res.status(401).json({ success: false, message: 'Authentication failed' });
+  }
+};
+
+module.exports = { au };
