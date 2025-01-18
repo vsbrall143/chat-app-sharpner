@@ -31,8 +31,9 @@ router.get('/groups/:groupId/messages', auth.au, getMessages);  // Get messages 
 
 
 const groupController = require('../controllers/group');
-
- 
+// Group Member Management Routes
+router.post('/groups/:groupId/members/:memberId/make-admin', auth.au, groupController.makeAdmin);
+router.delete('/groups/:groupId/members/:memberId', auth.au, groupController.removeMember);
 
 // Route to fetch pending invitations for the logged-in user
 router.get('/groups/pending-invites', auth.au, groupController.getPendingInvites);

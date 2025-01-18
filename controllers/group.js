@@ -7,7 +7,7 @@ const Message = require('../models/message');
 exports.getGroupsForUser = async (req, res) => {
   try {
 
-    console.log("baldlksjflaksdjfdkfjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
+    console.log("-------------------------------------------------------------------------------------groupController")
     const groups = await GroupMember.findAll({
       where: { userId: req.user.id },
       include: [{ model: Group, attributes: ['id', 'name'] }],
@@ -173,30 +173,39 @@ exports.declineInvite = async (req, res) => {
 
 exports.getGroupMembers = async (req, res) => {
   try {
-      const { groupId } = req.params;
-      const userId = req.user.id;
+    const { groupId } = req.params;
+    const userId = req.user.id;
 
-      // Get group members and their roles
-      const members = await GroupMember.findAll({
-          where: { groupId },
-          include: [
-              {
-                  model: User, 
-                  attributes: ['username'], // Include username of the members
-              },
-          ],
-      });
+    // Check if the requesting user is an admin of the group
+    const adminCheck = await GroupMember.findOne({
+      where: { groupId, userId, role: 'admin' },
+    });
 
-      // Format the response
-      const formattedMembers = members.map(member => ({
-          username: member.user.username,
-          role: member.role, // Either 'admin' or 'member'
-      }));
+    // Fetch group members and their roles
+    const members = await GroupMember.findAll({
+      where: { groupId },
+      include: [
+        {
+          model: User,
+          attributes: ['id', 'username'], // Include member IDs and usernames
+        },
+      ],
+    });
 
-      res.status(200).json({ members: formattedMembers });
+    // Format the members list for response
+    const formattedMembers = members.map(member => ({
+      id: member.user.id,
+      username: member.user.username,
+      role: member.role, // Either 'admin' or 'member'
+    }));
+
+    res.status(200).json({
+      members: formattedMembers,
+      isAdmin: !!adminCheck, // True if the user is an admin, otherwise false
+    });
   } catch (error) {
-      console.error('Error fetching group members:', error);
-      res.status(500).json({ message: 'Failed to fetch group members' });
+    console.error('Error fetching group members:', error);
+    res.status(500).json({ message: 'Failed to fetch group members' });
   }
 };
 
@@ -226,5 +235,56 @@ exports.updateRole = async (req, res) => {
   } catch (error) {
       console.error('Error updating role:', error);
       res.status(500).json({ message: 'Failed to update role' });
+  }
+};
+
+
+exports.makeAdmin = async (req, res) => {
+  const { groupId, memberId } = req.params;
+  const userId = req.user.id; // Logged-in user's ID
+
+  try {
+    // Check if the logged-in user is an admin of the group
+    const adminCheck = await GroupMember.findOne({ where: { groupId, userId, role: 'admin' } });
+    if (!adminCheck) {
+      return res.status(403).json({ message: 'Only admins can promote other members to admin.' });
+    }
+
+    // Update the member's role to 'admin'
+    const member = await GroupMember.findOne({ where: { groupId, userId: memberId } });
+    if (!member) {
+      return res.status(404).json({ message: 'Member not found in the group.' });
+    }
+
+    await member.update({ role: 'admin' });
+    res.status(200).json({ message: 'Member successfully promoted to admin.' });
+  } catch (error) {
+    console.error('Error promoting member to admin:', error);
+    res.status(500).json({ message: 'Failed to promote member to admin.' });
+  }
+};
+
+exports.removeMember = async (req, res) => {
+  const { groupId, memberId } = req.params;
+  const userId = req.user.id; // Logged-in user's ID
+
+  try {
+    // Check if the logged-in user is an admin of the group
+    const adminCheck = await GroupMember.findOne({ where: { groupId, userId, role: 'admin' } });
+    if (!adminCheck) {
+      return res.status(403).json({ message: 'Only admins can remove members from the group.' });
+    }
+
+    // Remove the member from the group
+    const member = await GroupMember.findOne({ where: { groupId, userId: memberId } });
+    if (!member) {
+      return res.status(404).json({ message: 'Member not found in the group.' });
+    }
+
+    await member.destroy();
+    res.status(200).json({ message: 'Member successfully removed from the group.' });
+  } catch (error) {
+    console.error('Error removing member from group:', error);
+    res.status(500).json({ message: 'Failed to remove member from the group.' });
   }
 };

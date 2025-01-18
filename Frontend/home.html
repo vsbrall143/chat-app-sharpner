@@ -6,11 +6,13 @@
     <title>Chat - Chat App</title>
     <link rel="stylesheet" href="css/style.css" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="js/home.js" defer></script>
+ 
   </head>
   <body>
     <!-- Header Section -->
     <div class="header">
+        <div id="user-info" class="user-info"></div>
+
       Chat App
       <button id="logout-button" onclick="logout()">Logout</button>
       <button id="create-group-button" onclick="showCreateGroupModal()">Create Group</button>
@@ -38,11 +40,12 @@
       <div class="chat-window">
         <!-- Group Members Section -->
         <div id="group-members" class="group-members">
-          <h3>Group Members</h3>
-          <ul id="members-list">
-            <!-- List of group members will be dynamically populated here -->
-          </ul>
-        </div>
+            <h3>Group Members</h3>
+            <ul id="members-list">
+              <!-- Members will be dynamically populated -->
+            </ul>
+          </div>
+          
 
         <!-- Messages Section -->
         <div class="messages" id="messages">
@@ -83,7 +86,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="home.js"></script>
- 
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <!-- Include the jwt-decode library to parse the token: -->
   </body>
 </html>
 

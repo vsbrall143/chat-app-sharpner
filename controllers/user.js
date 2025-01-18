@@ -11,11 +11,11 @@ const { v1: uuidv1} = require('uuid');
 
 const { Op, Transaction } = require('sequelize'); // Import Op for comparison operators
  
- function generateAccessToken(email){
-  return jwt.sign({email:email}, '8hy98h9yu89y98yn89y98y89')
- }
+//  function generateAccessToken(email){
+//   return jwt.sign({email:email}, '8hy98h9yu89y98yn89y98y89')
+//  }
 
- exports.postLogin = async (req, res) => {
+exports.postLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -31,17 +31,24 @@ const { Op, Transaction } = require('sequelize'); // Import Op for comparison op
       return res.status(401).json({ success: false, message: 'Invalid password' });
     }
 
-    // Generate a JWT token
-    const token = jwt.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET || 'default_secret', {
-      expiresIn: '1h',
-    });
+    // Generate a JWT token and include username
+    const token = jwt.sign(
+      { userId: user.id, email: user.email, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
 
-    res.status(200).json({ success: true, message: 'Login successful', token });
+    res.status(200).json({
+      success: true,
+      message: 'Login successful',
+      token,
+    });
   } catch (err) {
     console.error('Error during login:', err);
     res.status(500).json({ success: false, message: 'Internal server error' });
   }
 };
+
 
 
  

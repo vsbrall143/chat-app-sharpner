@@ -254,3 +254,23 @@ body {
     font-weight: bold;
     color: #673ab7;
 }
+
+
+
+.admin {
+    font-weight: bold;
+    color: green;
+  }
+  button {
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #673ab7;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  button:hover {
+    background-color: #5e2b8f;
+  }
+  
