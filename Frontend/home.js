@@ -5,7 +5,7 @@ async function loadGroupMembers(groupId) {
   const token = localStorage.getItem("token");
   try {
     const res = await axios.get(
-      `http://localhost:3000/groups/${groupId}/members`,
+      `https://expense-tracker-2o39.onrender.com/groups/${groupId}/members`,
       {
         headers: { Authorization: token },
       }
@@ -51,7 +51,7 @@ async function loadGroupMembers(groupId) {
 async function loadGroups() {
   const token = localStorage.getItem("token");
   try {
-    const res = await axios.get("http://localhost:3000/groups", {
+    const res = await axios.get("https://expense-tracker-2o39.onrender.com/groups", {
       headers: { Authorization: token },
     });
 
@@ -91,7 +91,7 @@ async function makeAdmin(groupId, memberId) {
   const token = localStorage.getItem("token");
   try {
     await axios.post(
-      `http://localhost:3000/groups/${groupId}/members/${memberId}/make-admin`,
+      `https://expense-tracker-2o39.onrender.com/groups/${groupId}/members/${memberId}/make-admin`,
       {},
       {
         headers: { Authorization: token },
@@ -110,7 +110,7 @@ async function removeMember(groupId, memberId) {
   try {
     console.log("delete user called");
     await axios.delete(
-      `http://localhost:3000/groups/${groupId}/members/${memberId}`,
+      `https://expense-tracker-2o39.onrender.com/groups/${groupId}/members/${memberId}`,
       {
         headers: { Authorization: token },
       }
@@ -128,7 +128,7 @@ async function loadMessages(groupId) {
   const token = localStorage.getItem("token");
   try {
     const res = await axios.get(
-      `http://localhost:3000/groups/${groupId}/messages`,
+      `https://expense-tracker-2o39.onrender.com/groups/${groupId}/messages`,
       {
         headers: { Authorization: token },
       }
@@ -167,7 +167,7 @@ async function sendMessage() {
   const token = localStorage.getItem("token");
   try {
     await axios.post(
-      `http://localhost:3000/groups/${currentGroupId}/messages`,
+      `https://expense-tracker-2o39.onrender.com/groups/${currentGroupId}/messages`,
       { message },
       {
         headers: { Authorization: token },
@@ -203,7 +203,7 @@ async function createGroup() {
 
   try {
     const res = await axios.post(
-      "http://localhost:3000/groups/create",
+      "https://expense-tracker-2o39.onrender.com/groups/create",
       { name: groupName },
       { headers: { Authorization: token } }
     );
@@ -238,7 +238,7 @@ async function inviteToGroup() {
   const token = localStorage.getItem("token");
   try {
     await axios.post(
-      `http://localhost:3000/groups/${currentGroupId}/invite`,
+      `https://expense-tracker-2o39.onrender.com/groups/${currentGroupId}/invite`,
       { email },
       {
         headers: { Authorization: token },
@@ -257,7 +257,7 @@ async function loadPendingInvites() {
   const token = localStorage.getItem("token");
   try {
     const res = await axios.get(
-      "http://localhost:3000/groups/pending-invites",
+      "https://expense-tracker-2o39.onrender.com/groups/pending-invites",
       {
         headers: { Authorization: token },
       }
@@ -289,7 +289,7 @@ async function acceptInvite(groupId) {
   const token = localStorage.getItem("token");
   try {
     await axios.post(
-      `http://localhost:3000/groups/${groupId}/accept-invite`,
+      `https://expense-tracker-2o39.onrender.com/groups/${groupId}/accept-invite`,
       {},
       {
         headers: { Authorization: token },
@@ -309,7 +309,7 @@ async function declineInvite(groupId) {
   const token = localStorage.getItem("token");
   try {
     await axios.post(
-      `http://localhost:3000/groups/${groupId}/decline-invite`,
+      `https://expense-tracker-2o39.onrender.com/groups/${groupId}/decline-invite`,
       {},
       {
         headers: { Authorization: token },

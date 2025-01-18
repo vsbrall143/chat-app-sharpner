@@ -1,6 +1,6 @@
 const fs=require('fs');
 const path = require('path');
-require('dotenv').config(); // Load environment variables from .env file
+ 
 const express = require('express');
 const bodyParser = require('body-parser');
 const sequelize=require('./util/database'); 
@@ -62,14 +62,13 @@ User.hasMany(Message, { foreignKey: 'userId' });
 Message.belongsTo(User, { foreignKey: 'userId' });
 
 
+require("dotenv").config();
 
 sequelize
 .sync()
 .then((result) => {
   // console.log(result);
- 
-  console.log("conndected");
-  app.listen(3000);
+  app.listen(3306,()=>{ console.log("listening on port no 3000")});
 })
 .catch((err) => {
   console.log(err);
