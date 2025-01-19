@@ -1,54 +1,43 @@
-const fs=require('fs');
-const path = require('path');
- 
 const express = require('express');
 const bodyParser = require('body-parser');
-const sequelize=require('./util/database'); 
+const sequelize = require('./util/database');
+const compression = require('compression');
+const helmet = require('helmet');
+const cors = require('cors');
+const path = require('path');
 
-const userroutes = require('./routes/user');
-const compression=require('compression')
-const helmet=require('helmet');
-// const morgan=require('morgan');
+const userRoutes = require('./routes/user');
+ 
+
+// Initialize Express app
 const app = express();
-var cors = require('cors');
 
-const accessLogStream=fs.createWriteStream(
-  path.join(__dirname,'access.log'),
-  {flags:'a'}
-);
-
-// app.use(morgan('combined',{stream:accessLogStream}));
+// Middleware
 app.use(helmet());
 app.use(compression());
- 
-app.use( 
-  cors({
-    // origin:'http://127.0.0.1:5501',
-    methods:["GET","POST","DELETE"],
-    credentials:true
-  })
-)
- 
-app.use(bodyParser.json());
+app.use(cors({
+  origin: 'http://localhost:5500', // Replace with your frontend URL
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}));
 
+app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// Static files (e.g., for serving frontend files)
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(userroutes);
-
-
-
-
-
+// Routes
+app.use(userRoutes);
  
+
+// Database associations
 const User = require('./models/user');
 const Group = require('./models/group');
 const GroupMember = require('./models/groupMember');
 const Message = require('./models/message');
 
- 
-
-// Define associations between models
+// Define model associations
 Group.hasMany(GroupMember, { foreignKey: 'groupId' });
 GroupMember.belongsTo(Group, { foreignKey: 'groupId' });
 
@@ -61,17 +50,5 @@ Message.belongsTo(Group, { foreignKey: 'groupId' });
 User.hasMany(Message, { foreignKey: 'userId' });
 Message.belongsTo(User, { foreignKey: 'userId' });
 
-
-require("dotenv").config();
-
-sequelize
-.sync()
-.then((result) => {
-  // console.log(result);
-  app.listen(3306,()=>{ console.log("listening on port no 3000")});
-})
-.catch((err) => {
-  console.log(err);
-});
-
- 
+// Export the app for use in server.js
+module.exports = app;

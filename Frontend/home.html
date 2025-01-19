@@ -6,46 +6,42 @@
     <title>Chat - Chat App</title>
     <link rel="stylesheet" href="css/style.css" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
- 
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script> <!-- WebSocket support -->
   </head>
   <body>
     <!-- Header Section -->
     <div class="header">
-        <div id="user-info" class="user-info"></div>
+      <div id="user-info" class="user-info"></div> <!-- User Info Placeholder -->
 
-      Chat App
+      <h1>Chat App</h1>
       <button id="logout-button" onclick="logout()">Logout</button>
       <button id="create-group-button" onclick="showCreateGroupModal()">Create Group</button>
     </div>
 
     <!-- Chat Container -->
     <div class="chat-container">
-      <!-- Group List -->
+      <!-- Pending Invitations Section -->
       <div class="pending-invites" id="pending-invites">
         <h3>Pending Invitations</h3>
         <!-- Dynamic list of invitations will be added here -->
       </div>
 
+      <!-- Groups Section -->
       <div class="groups" id="groups">
+        <h3>Your Groups</h3>
         <!-- Dynamic group list will be appended here -->
-        <!-- Example group with an invite button -->
-        <div class="group" id="group-1">
-          Group Name
-          <button onclick="showInviteModal(1)">Invite</button>
-          <!-- Pass group ID dynamically -->
-        </div>
       </div>
 
       <!-- Chat Window -->
       <div class="chat-window">
         <!-- Group Members Section -->
         <div id="group-members" class="group-members">
-            <h3>Group Members</h3>
-            <ul id="members-list">
-              <!-- Members will be dynamically populated -->
-            </ul>
-          </div>
-          
+          <h3>Group Members</h3>
+          <ul id="members-list">
+            <!-- Members will be dynamically populated -->
+          </ul>
+        </div>
 
         <!-- Messages Section -->
         <div class="messages" id="messages">
@@ -61,7 +57,7 @@
     </div>
 
     <!-- Modal for Inviting Members -->
-    <div id="invite-modal" class="modal" style="display: none">
+    <div id="invite-modal" class="modal" style="display: none;">
       <div class="modal-content">
         <span class="close" onclick="closeInviteModal()">&times;</span>
         <h3>Invite to Group</h3>
@@ -84,10 +80,6 @@
       </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-    <script src="home.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
-    <!-- Include the jwt-decode library to parse the token: -->
+    <script src="home.js" defer></script>
   </body>
 </html>
-
