@@ -6,7 +6,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
 
-const userRoutes = require('./routes/user');
+const userRoutes = require('./routes/user.js');
  
 
 // Initialize Express app
@@ -42,11 +42,11 @@ app.use(userRoutes);
  
 
 // Database associations
-const User = require('./models/user');
-const Group = require('./models/group');
-const GroupMember = require('./models/groupMember');
-const Message = require('./models/message');
 
+const Group = require('./models/Group.js');
+const GroupMember = require('./models/GroupMember.js');
+const Message = require('./models/Message.js');
+const User = require('./models/User.js');
 // Define model associations
 Group.hasMany(GroupMember, { foreignKey: 'groupId' });
 GroupMember.belongsTo(Group, { foreignKey: 'groupId' });
