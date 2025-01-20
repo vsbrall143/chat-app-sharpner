@@ -5,15 +5,16 @@ const connectionEvent = require('./sockets/connectionEvent');
 const messageEvent = require('./sockets/messageEvents');
 const groupEvent = require('./sockets/groupEvents');
 const inviteEvent = require('./sockets/inviteEvent');
-
+const cors = require('cors');
 // Create HTTP server and bind to Express
 const server = http.createServer(app);
 
 // Initialize Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: '*', // Frontend origin
-    methods: ['GET', 'POST'],
+    origin: '*', // Allow all origins
+    methods: '*', // Allow all methods
+    allowedHeaders: '*', // Allow all headers
   },
 });
 
@@ -29,7 +30,7 @@ io.on('connection', (socket) => {
 });
 
 // Start the server
-const PORT = 5000;
+const PORT = 3306;
 server.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${3306}`);
 });

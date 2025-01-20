@@ -15,11 +15,21 @@ const app = express();
 // Middleware
 app.use(helmet());
 app.use(compression());
-app.use(cors({
-  origin: '*', // Replace with your frontend URL
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true,
-}));
+
+app.use(cors());
+app.options('*', (req, res) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  res.sendStatus(200); // Respond with HTTP 200 for preflight requests
+});
+
+
+// app.use(cors({
+//   origin: '*', // Replace with your frontend URL
+//   methods: ['GET', 'POST', 'PUT', 'DELETE'],
+//   credentials: true,
+// }));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
