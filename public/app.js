@@ -6,7 +6,7 @@ async function signUp() {
     const password = document.getElementById('signup-password').value;
 
     try {
-        const res = await axios.post('http://localhost:3306/user/signup', { username, email, password });
+        const res = await axios.post('https://chat-app-sharpner.onrender.com/user/signup', { username, email, password });
         alert('Signup successful! Please login.');
         window.location.href = 'index.html';
     } catch (error) {
@@ -20,7 +20,7 @@ async function login() {
     const password = document.getElementById('login-password').value;
 
     try {
-        const res = await axios.post('http://localhost:3306/user/login', { email, password });
+        const res = await axios.post('https://chat-app-sharpner.onrender.com/user/login', { email, password });
         localStorage.setItem('token', res.data.token);
         alert('Login successful!');
         window.location.href = 'home.html';

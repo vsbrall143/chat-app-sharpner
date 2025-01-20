@@ -4,7 +4,7 @@
 let currentGroupId = null; // Track the selected group ID
 
 // WebSocket connection
-const socket = io('http://localhost:3306');
+const socket = io('https://chat-app-sharpner.onrender.com');
 
 // Listen for real-time messages
 socket.on('receiveMessage', (data) => {
@@ -31,7 +31,7 @@ async function createGroup() {
 
   try {
     const res = await axios.post(
-      "http://localhost:3306/groups/create",
+      "https://chat-app-sharpner.onrender.com/groups/create",
       { name: groupName },
       { headers: { Authorization: token } }
     );
@@ -54,7 +54,7 @@ async function inviteToGroup() {
   const token = localStorage.getItem('token');
   try {
     await axios.post(
-      `http://localhost:3306/groups/${currentGroupId}/invite`,
+      `https://chat-app-sharpner.onrender.com/groups/${currentGroupId}/invite`,
       { email },
       {
         headers: { Authorization: token },
@@ -73,7 +73,7 @@ async function inviteToGroup() {
 async function loadGroups() {
   const token = localStorage.getItem('token');
   try {
-    const res = await axios.get('http://localhost:3306/groups', {
+    const res = await axios.get('https://chat-app-sharpner.onrender.com/groups', {
       headers: { Authorization: token },
     });
 
@@ -114,7 +114,7 @@ function joinGroup(groupId) {
 async function loadMessages(groupId) {
   const token = localStorage.getItem('token');
   try {
-    const res = await axios.get(`http://localhost:3306/groups/${groupId}/messages`, {
+    const res = await axios.get(`https://chat-app-sharpner.onrender.com/groups/${groupId}/messages`, {
       headers: { Authorization: token },
     });
 
@@ -159,7 +159,7 @@ function sendMessage() {
 async function loadGroupMembers(groupId) {
   const token = localStorage.getItem('token');
   try {
-    const res = await axios.get(`http://localhost:3306/groups/${groupId}/members`, {
+    const res = await axios.get(`https://chat-app-sharpner.onrender.com/groups/${groupId}/members`, {
       headers: { Authorization: token },
     });
 
@@ -201,7 +201,7 @@ async function loadGroupMembers(groupId) {
 async function makeAdmin(groupId, memberId) {
   const token = localStorage.getItem('token');
   try {
-    await axios.post(`http://localhost:3306/groups/${groupId}/members/${memberId}/make-admin`, {}, {
+    await axios.post(`https://chat-app-sharpner.onrender.com/groups/${groupId}/members/${memberId}/make-admin`, {}, {
       headers: { Authorization: token },
     });
     alert('Member promoted to admin.');
@@ -216,7 +216,7 @@ async function makeAdmin(groupId, memberId) {
 async function removeMember(groupId, memberId) {
   const token = localStorage.getItem('token');
   try {
-    await axios.delete(`http://localhost:3306/groups/${groupId}/members/${memberId}`, {
+    await axios.delete(`https://chat-app-sharpner.onrender.com/groups/${groupId}/members/${memberId}`, {
       headers: { Authorization: token },
     });
     alert('Member removed from the group.');
@@ -267,7 +267,7 @@ async function loadPendingInvites() {
   const token = localStorage.getItem("token");
   try {
     const res = await axios.get(
-      "http://localhost:3306/groups/pending-invites",
+      "https://chat-app-sharpner.onrender.com/groups/pending-invites",
       {
         headers: { Authorization: token },
       }
@@ -299,7 +299,7 @@ async function acceptInvite(groupId) {
   const token = localStorage.getItem("token");
   try {
     await axios.post(
-      `http://localhost:3306/groups/${groupId}/accept-invite`,
+      `https://chat-app-sharpner.onrender.com/groups/${groupId}/accept-invite`,
       {},
       {
         headers: { Authorization: token },
@@ -319,7 +319,7 @@ async function declineInvite(groupId) {
   const token = localStorage.getItem("token");
   try {
     await axios.post(
-      `http://localhost:3306/groups/${groupId}/decline-invite`,
+      `https://chat-app-sharpner.onrender.com/groups/${groupId}/decline-invite`,
       {},
       {
         headers: { Authorization: token },
