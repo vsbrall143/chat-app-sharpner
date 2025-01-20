@@ -8,7 +8,7 @@ const jwt=require('jsonwebtoken');
 const sequelize=require('../util/database'); 
 const { BlobServiceClient } = require('@azure/storage-blob');
 const { v1: uuidv1} = require('uuid');
-
+require("dotenv").config();
 const { Op, Transaction } = require('sequelize'); // Import Op for comparison operators
  
 //  function generateAccessToken(email){

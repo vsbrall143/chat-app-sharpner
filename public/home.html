@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="css/style.css" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
-    <script src="/socket.io/socket.io.js"></script> <!-- WebSocket support -->
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+
+
   </head>
   <body>
     <!-- Header Section -->
@@ -79,6 +81,8 @@
         <button onclick="createGroup()">Create</button>
       </div>
     </div>
+    <script type="module" src="./home.js"></script>
+ 
 
     <script src="home.js" defer></script>
   </body>

@@ -1,4 +1,5 @@
-import { io } from 'socket.io-client';
+// import { io } from 'socket.io-client';
+
 
 let currentGroupId = null; // Track the selected group ID
 
@@ -16,6 +17,57 @@ socket.on('receiveMessage', (data) => {
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
   }
 });
+
+
+
+async function createGroup() {
+  const groupName = document.getElementById('group-name-input').value.trim();
+  const token = localStorage.getItem('token');
+
+  if (!groupName) {
+    alert("Please enter a group name.");
+    return;
+  }
+
+  try {
+    const res = await axios.post(
+      "http://localhost:5000/groups/create",
+      { name: groupName },
+      { headers: { Authorization: token } }
+    );
+    alert("Group created successfully!");
+    loadGroups(); // Reload group list
+    closeCreateGroupModal(); // Close modal after group creation
+  } catch (error) {
+    console.error("Error creating group:", error);
+    alert("Failed to create group.");
+  }
+}
+
+async function inviteToGroup() {
+  const email = document.getElementById('invite-email-input').value.trim();
+  if (!email) {
+    alert('Please enter an email address.');
+    return;
+  }
+
+  const token = localStorage.getItem('token');
+  try {
+    await axios.post(
+      `http://localhost:5000/groups/${currentGroupId}/invite`,
+      { email },
+      {
+        headers: { Authorization: token },
+      }
+    );
+    alert('User invited successfully!');
+    closeInviteModal();
+  } catch (error) {
+    console.error('Error inviting user:', error);
+    alert('Failed to invite user. Please try again.');
+  }
+}
+
 
 // Load all groups for the logged-in user
 async function loadGroups() {
@@ -207,6 +259,95 @@ function parseJwt(token) {
       .join('')
   );
   return JSON.parse(jsonPayload);
+}
+
+
+// Load pending invitations
+async function loadPendingInvites() {
+  const token = localStorage.getItem("token");
+  try {
+    const res = await axios.get(
+      "http://localhost:5000/groups/pending-invites",
+      {
+        headers: { Authorization: token },
+      }
+    );
+
+    const pendingInvitesContainer = document.getElementById("pending-invites");
+    pendingInvitesContainer.innerHTML = "<h3>Pending Invitations</h3>"; // Add header
+
+    res.data.invites.forEach((invite) => {
+      const inviteDiv = document.createElement("div");
+      inviteDiv.classList.add("invite");
+      inviteDiv.innerHTML = `
+        ${invite.groupName}
+        <div>
+          <button class="accept" onclick="acceptInvite(${invite.groupId})">Accept</button>
+          <button class="decline" onclick="declineInvite(${invite.groupId})">Decline</button>
+        </div>
+      `;
+      pendingInvitesContainer.appendChild(inviteDiv);
+    });
+  } catch (error) {
+    console.error("Error fetching pending invites:", error);
+    alert("Failed to load pending invitations.");
+  }
+}
+
+// Accept an invitation
+async function acceptInvite(groupId) {
+  const token = localStorage.getItem("token");
+  try {
+    await axios.post(
+      `http://localhost:5000/groups/${groupId}/accept-invite`,
+      {},
+      {
+        headers: { Authorization: token },
+      }
+    );
+    alert("Successfully joined the group!");
+    loadPendingInvites(); // Reload pending invites
+    loadGroups(); // Reload group list
+  } catch (error) {
+    console.error("Error accepting invite:", error);
+    alert("Failed to accept invitation.");
+  }
+}
+
+// Decline an invitation
+async function declineInvite(groupId) {
+  const token = localStorage.getItem("token");
+  try {
+    await axios.post(
+      `http://localhost:5000/groups/${groupId}/decline-invite`,
+      {},
+      {
+        headers: { Authorization: token },
+      }
+    );
+    alert("Invitation declined.");
+    loadPendingInvites(); // Reload pending invites
+  } catch (error) {
+    console.error("Error declining invite:", error);
+    alert("Failed to decline invitation.");
+  }
+}
+
+
+function getUserDetails() {
+  const token = localStorage.getItem('token');
+  if (!token) return null;
+
+  try {
+    const decoded = jwt_decode(token); // Decode the token
+    return {
+      username: decoded.username,
+      email: decoded.email,
+    };
+  } catch (error) {
+    console.error('Error decoding token:', error);
+    return null;
+  }
 }
 
 // Initialize the app when the window loads
