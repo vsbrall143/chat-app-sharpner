@@ -5,7 +5,7 @@ const sequelize=require('../util/database');
 const { BlobServiceClient } = require('@azure/storage-blob');
 const { v1: uuidv1} = require('uuid');
 const { Op } = require('sequelize'); 
-// const User = require('../models/User.js');
+const User = require('../models/usermodel');
 const Message = require('../models/messagemodel');  
 
   // Route: POST /groups/:groupId/messages
