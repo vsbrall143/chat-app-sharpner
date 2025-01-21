@@ -1,7 +1,7 @@
-const Group = require('../models/group');
-const Message = require('../models/message');  
-const GroupMember = require('../models/groupMember');
-const User = require('../models/User.js');
+const Group = require('../models/groupmodel');
+const Message = require('../models/messagemodel');  
+const GroupMember = require('../models/groupMembermodel');
+const User = require('../models/usermodel');
 const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken');
 // const { Op } = require('sequelize');

@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../util/database');
 
-const message = sequelize.define('message', {
+const messagemodel = sequelize.define('message', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -24,4 +24,4 @@ const message = sequelize.define('message', {
   timestamps: true, // Automatically adds `createdAt` for when the message was sent
 });
 
-module.exports = message;
+module.exports = messagemodel;

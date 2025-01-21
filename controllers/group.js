@@ -1,8 +1,8 @@
-const Group = require('../models/group');
-const groupMember = require('../models/groupMember');
-const GroupMember = require('../models/groupMember');
-const User = require('../models/User.js');
-const Message = require('../models/message');
+const Group = require('../models/groupmodel');
+const groupMember = require('../models/groupMembermodel');
+const GroupMember = require('../models/groupMembermodel');
+// const User = require('../models/User.js');
+const Message = require('../models/messagemodel');
 
 exports.getGroupsForUser = async (req, res) => {
   try {

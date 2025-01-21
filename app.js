@@ -42,11 +42,11 @@ app.use(userRoutes);
  
 
 // Database associations
+const User = require('./models/usermodel');
+const Group = require('./models/groupmodel');
+const GroupMember = require('./models/groupMembermodel');
+const Message = require('./models/messagemodel');
 
-const Group = require('./models/Group.js');
-const GroupMember = require('./models/GroupMember.js');
-const Message = require('./models/Message.js');
-const User = require('./models/User.js');
 // Define model associations
 Group.hasMany(GroupMember, { foreignKey: 'groupId' });
 GroupMember.belongsTo(Group, { foreignKey: 'groupId' });

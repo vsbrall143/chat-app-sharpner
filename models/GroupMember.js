@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../util/database');
 
-const GroupMember = sequelize.define('groupMember', {
+const groupMembermodel = sequelize.define('groupMember', {
     id: {
         type: Sequelize.INTEGER,
         autoIncrement: true,
@@ -20,4 +20,4 @@ const GroupMember = sequelize.define('groupMember', {
     },
 });
 
-module.exports = GroupMember;
+module.exports = groupMembermodel;

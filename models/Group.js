@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../util/database');
 
-const group = sequelize.define('group', {
+const groupmodel = sequelize.define('group', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -16,4 +16,4 @@ const group = sequelize.define('group', {
   timestamps: true, // Automatically adds `createdAt` and `updatedAt` fields
 });
 
-module.exports = group;
+module.exports = groupmodel;
