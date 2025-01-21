@@ -14,7 +14,20 @@ const app = express();
 
 // Middleware
 app.use(helmet());
- 
+const helmet = require('helmet');
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        "default-src": ["'self'"],
+        "script-src": ["'self'", "https://cdn.jsdelivr.net", "https://cdn.socket.io"],
+        // Add other directives as needed
+      },
+    },
+  })
+);
+
  
 
 app.use(
