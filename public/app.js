@@ -1,7 +1,8 @@
-import axios from 'axios';
+
 
 
 async function signUp() {
+    
     const username = document.getElementById('signup-username').value;
     const email = document.getElementById('signup-email').value;
     const password = document.getElementById('signup-password').value;
