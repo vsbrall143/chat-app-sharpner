@@ -13,21 +13,32 @@
   </head>
   <body>
     <!-- Header Section -->
-    <div class="header">
-      <div id="user-info" class="user-info"></div> <!-- User Info Placeholder -->
-
-      <h1>Chat App</h1>
-      <button id="logout-button" onclick="logout()">Logout</button>
-      <button id="create-group-button" onclick="showCreateGroupModal()">Create Group</button>
-    </div>
+    <nav>
+      <div id="user-info" class="user-info"></div>  
+      <div class="logo">~ whatsapp ~</div>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="pendinginvites.html">invites</a></li>
+        <li><a href="#" onclick="showCreateGroupModal()" >create-group</a></li>
+        <li><a href="#" onclick="logout()" >logout</a></li>
+      </ul>
+      <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    </nav>
+  
+    <script>
+      const toggleMenu = () => {
+        const navLinks = document.querySelector('.nav-links');
+        navLinks.classList.toggle('show');
+      };
+    </script>
 
     <!-- Chat Container -->
     <div class="chat-container">
       <!-- Pending Invitations Section -->
-      <div class="pending-invites" id="pending-invites">
+<!--       <div class="pending-invites" id="pending-invites">
         <h3>Pending Invitations</h3>
         <!-- Dynamic list of invitations will be added here -->
-      </div>
+      </div> -->
 
       <!-- Groups Section -->
       <div class="groups" id="groups">
