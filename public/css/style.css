@@ -3,12 +3,12 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
+    background-color: #fff8f0;
+    color: #4b4b4b;
 }
 
 .header {
-    background-color: #673ab7;
+    background-color: #ff7043;
     color: white;
     padding: 10px 20px;
     text-align: center;
@@ -21,6 +21,7 @@ body {
     align-items: center;
     justify-content: center;
     height: 100vh;
+    padding: 10px;
 }
 
 /* Form Styling */
@@ -29,7 +30,8 @@ body {
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    width: 300px;
+    width: 90%;
+    max-width: 400px;
     text-align: center;
 }
 
@@ -42,23 +44,24 @@ body {
 }
 
 .form button {
-    background-color: #673ab7;
+    background-color: #ff7043;
     color: white;
     border: none;
     padding: 10px;
     width: 100%;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 1rem;
 }
 
 .form button:hover {
-    background-color: #5e2b8f;
+    background-color: #e64a19;
 }
 
 .link {
     margin-top: 10px;
     display: block;
-    color: #673ab7;
+    color: #ff7043;
     text-decoration: none;
 }
 
@@ -69,21 +72,36 @@ body {
 /* Chat UI */
 .chat-container {
     display: flex;
+    flex-direction: column;
     height: calc(100vh - 50px);
 }
 
+@media (min-width: 768px) {
+    .chat-container {
+        flex-direction: row;
+    }
+}
+
 .groups {
-    width: 30%;
-    background-color: #efefef;
+    width: 100%;
+    background-color: #ffe0cc;
     padding: 10px;
-    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
     overflow-y: auto;
+}
+
+@media (min-width: 768px) {
+    .groups {
+        width: 30%;
+        border-bottom: none;
+        border-right: 1px solid #ddd;
+    }
 }
 
 .group {
     padding: 10px;
     margin-bottom: 5px;
-    background-color: #f9f9f9;
+    background-color: #fff3e0;
     border: 1px solid #ddd;
     border-radius: 5px;
     cursor: pointer;
@@ -91,7 +109,7 @@ body {
 }
 
 .group:hover {
-    background-color: #e3e3e3;
+    background-color: #ffe0cc;
 }
 
 .chat-window {
@@ -111,21 +129,22 @@ body {
     padding: 10px;
     margin-bottom: 10px;
     border-radius: 5px;
-    max-width: 60%;
+    max-width: 80%;
 }
 
 .message.sent {
     margin-left: auto;
-    background-color: #673ab7;
+    background-color: #ff7043;
     color: white;
 }
 
 .message.received {
-    background-color: #e3e3e3;
+    background-color: #ffe0cc;
 }
 
 .send-box {
     display: flex;
+    flex-wrap: wrap;
     padding: 10px;
     border-top: 1px solid #ddd;
 }
@@ -135,22 +154,22 @@ body {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 5px;
+    margin-bottom: 10px;
 }
 
 .send-box button {
     padding: 10px;
-    margin-left: 10px;
-    background-color: #673ab7;
+    background-color: #ff7043;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    font-size: 1rem;
 }
 
 .send-box button:hover {
-    background-color: #5e2b8f;
+    background-color: #e64a19;
 }
-
 
 /* Modal Styling */
 .modal {
@@ -170,7 +189,8 @@ body {
     margin: 15% auto;
     padding: 20px;
     border: 1px solid #ddd;
-    width: 300px;
+    width: 90%;
+    max-width: 400px;
     border-radius: 10px;
     text-align: center;
 }
@@ -186,18 +206,17 @@ body {
     color: red;
 }
 
-
 .pending-invites {
     margin: 20px;
     padding: 10px;
-    background-color: #efefef;
+    background-color: #ffe0cc;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
 .pending-invites h3 {
     margin-bottom: 10px;
-    color: #673ab7;
+    color: #ff7043;
 }
 
 .invite {
@@ -228,9 +247,8 @@ body {
     color: white;
 }
 
-
 .group-members {
-    background-color: #f1f1f1;
+    background-color: #fff3e0;
     padding: 10px;
     margin-top: 20px;
     border-radius: 8px;
@@ -252,25 +270,19 @@ body {
 
 .group-members .admin {
     font-weight: bold;
-    color: #673ab7;
+    color: #ff7043;
 }
 
-
-
-.admin {
-    font-weight: bold;
-    color: green;
-  }
-  button {
+button {
     margin-left: 10px;
     padding: 5px 10px;
-    background-color: #673ab7;
+    background-color: #ff7043;
     color: white;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-  }
-  button:hover {
-    background-color: #5e2b8f;
-  }
-  
+}
+
+button:hover {
+    background-color: #e64a19;
+}
