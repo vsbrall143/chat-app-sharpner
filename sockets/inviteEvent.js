@@ -1,4 +1,4 @@
-const GroupMember = require('../models/groupMember'); // Import your GroupMember model
+const GroupMember = require('../models/groupmembermodel'); // Import your GroupMember model
 
 module.exports = (socket, io) => {
   // Listen for "sendInvite" event

@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const sequelize = require('../util/database');
 
-const invite = sequelize.define('invite', {
+const invitemodel = sequelize.define('invite', {
   id: {
     type: Sequelize.INTEGER,
     autoIncrement: true,
@@ -25,4 +25,4 @@ const invite = sequelize.define('invite', {
   timestamps: true,
 });
 
-module.exports = invite;
+module.exports = invitemodel;

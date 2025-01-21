@@ -1,6 +1,6 @@
 const Group = require('../models/groupmodel');
 const Message = require('../models/messagemodel');  
-const GroupMember = require('../models/groupMembermodel');
+const GroupMember = require('../models/groupmembermodel');
 const User = require('../models/usermodel');
 const bcrypt=require('bcryptjs');
 const jwt=require('jsonwebtoken');

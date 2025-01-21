@@ -1,4 +1,4 @@
-const Message = require('../models/message'); // Import your Message model
+const Message = require('../models/messagemodel'); // Import your Message model
 
 module.exports = (socket, io) => {
   // Listen for "sendMessage" event

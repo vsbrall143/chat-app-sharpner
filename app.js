@@ -44,7 +44,7 @@ app.use(userRoutes);
 // Database associations
 const User = require('./models/usermodel');
 const Group = require('./models/groupmodel');
-const GroupMember = require('./models/groupMembermodel');
+const GroupMember = require('./models/groupmembermodel');
 const Message = require('./models/messagemodel');
 
 // Define model associations

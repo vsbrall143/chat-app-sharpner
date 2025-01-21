@@ -1,7 +1,7 @@
 const Group = require('../models/groupmodel');
-const groupMember = require('../models/groupMembermodel');
-const GroupMember = require('../models/groupMembermodel');
-// const User = require('../models/User.js');
+ 
+const GroupMember = require('../models/groupmembermodel');
+const User = require('../models/usermodel');
 const Message = require('../models/messagemodel');
 
 exports.getGroupsForUser = async (req, res) => {
