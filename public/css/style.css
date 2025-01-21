@@ -8,7 +8,7 @@ body {
 }
 
 .header {
-    background-color: #FD8FF4;
+    background-color:  #874f83;
     color: white;
     padding: 10px 20px;
     text-align: center;
@@ -44,7 +44,7 @@ body {
 }
 
 .form button {
-    background-color: #FD8FF4;
+    background-color: #874f83;
     color: white;
     border: none;
     padding: 10px;
@@ -61,7 +61,7 @@ body {
 .link {
     margin-top: 10px;
     display: block;
-    color: #FD8FF4;
+    color:  #874f83;
     text-decoration: none;
 }
 
@@ -134,7 +134,7 @@ body {
 
 .message.sent {
     margin-left: auto;
-    background-color: #FD8FF4;
+    background-color:  #874f83;
     color: white;
 }
 
@@ -159,7 +159,7 @@ body {
 
 .send-box button {
     padding: 10px;
-    background-color: #FD8FF4;
+    background-color:  #874f83;
     color: white;
     border: none;
     border-radius: 5px;
@@ -203,20 +203,20 @@ body {
 }
 
 .close:hover {
-    color: #ffe0cc;
+    color: red;
 }
 
 .pending-invites {
     margin: 20px;
     padding: 10px;
-    background-color:#B965E1; 
+    background-color: #ffe0cc;
     border: 1px solid #ddd;
     border-radius: 5px;
 }
 
 .pending-invites h3 {
     margin-bottom: 10px;
-    color: #FD8FF4;
+    color:  #874f83;
 }
 
 .invite {
@@ -270,13 +270,13 @@ body {
 
 .group-members .admin {
     font-weight: bold;
-    color: #FD8FF4;
+    color:  #874f83;
 }
 
 button {
     margin-left: 10px;
     padding: 5px 10px;
-    background-color: #FD8FF4;
+    background-color:  #874f83;
     color: white;
     border: none;
     border-radius: 5px;
