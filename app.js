@@ -27,6 +27,19 @@ app.use(
     },
   })
 );
+ 
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        "default-src": ["'self'"],
+        "script-src": ["'self'", "https://cdn.jsdelivr.net"],
+        // Add other necessary sources (e.g., for CSS or images) as needed
+      },
+    },
+  })
+);
 
 
 
