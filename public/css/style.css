@@ -1,4 +1,84 @@
 /* General Styling */
+
+/* navbar */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+  }
+
+  nav {
+    background-color:  #9BB2E9;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: E4F3F4
+  }
+
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+  }
+
+  .nav-links li {
+    display: inline;
+  }
+
+  .nav-links a {
+    text-decoration: none;
+    color: #ffffff;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+  }
+
+  .nav-links a:hover {
+    color: #ffe0cc;
+  }
+
+  .menu-toggle {
+    display: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+  }
+
+  /* Mobile Responsiveness */
+  @media screen and (max-width: 768px) {
+    .nav-links {
+      display: none;
+      flex-direction: column;
+      width: 100%;
+      background-color: #9BB2E9;
+      position: absolute;
+      top: 60px;
+      left: 0;
+    }
+
+    .nav-links li {
+      text-align: center;
+      padding: 10px 0;
+    }
+
+    .nav-links.show {
+      display: flex;
+    }
+
+    .menu-toggle {
+      display: block;
+    }
+  }
+
+/* navbar-ends */
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -109,14 +189,14 @@ body {
 }
 
 .group:hover {
-    background-color: #ffe0cc;
+    background-color: #C2E5F7;
 }
 
 .chat-window {
     flex: 1;
     display: flex;
     flex-direction: column;
-    background-color: #fff;
+    background-color: #480b0b00;
 }
 
 .messages {
@@ -207,6 +287,7 @@ body {
 }
 
 .pending-invites {
+    height: 400px;
     margin: 20px;
     padding: 10px;
     background-color: #ffe0cc;
@@ -216,7 +297,7 @@ body {
 
 .pending-invites h3 {
     margin-bottom: 10px;
-    color:  #874f83;
+    color:  #000000;
 }
 
 .invite {
@@ -243,7 +324,7 @@ body {
 }
 
 .invite button.decline {
-    background-color: #f44336;
+    background-color: #874f83;
     color: white;
 }
 
