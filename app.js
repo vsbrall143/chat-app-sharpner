@@ -13,7 +13,20 @@ const userRoutes = require('./routes/user.js');
 const app = express();
 
 // Middleware
-app.use(helmet());
+// app.use(helmet());
+
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        "default-src": ["'self'"],
+        "script-src": ["'self'", "https://cdn.jsdelivr.net", "https://cdn.socket.io"],
+        // Add other directives as needed
+      },
+    },
+  })
+);
+
 app.use(compression());
 
 app.use(cors());
