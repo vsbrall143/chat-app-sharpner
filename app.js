@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const sequelize = require('./util/database');
 const compression = require('compression');
-// const helmet = require('helmet');
+const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
 
