@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const sequelize = require('./util/database');
 const compression = require('compression');
-const helmet = require('helmet');
+// const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
 
@@ -13,35 +13,20 @@ const userRoutes = require('./routes/user.js');
 const app = express();
 
 // Middleware
-app.use(helmet());
- 
- 
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        "default-src": ["'self'"],
-        "script-src": ["'self'", "https://cdn.jsdelivr.net", "https://cdn.socket.io"],
-        // Add other directives as needed
-      },
-    },
-  })
-);
-
-
-app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        "script-src": ["'self'"],
-        "script-src-attr": ["'self'", "'unsafe-inline'"], // Allows inline event handlers
-      },
-    },
-  })
-);
-
-
-
+// app.use(helmet());
+// const helmet = require('helmet');
+// app.use(
+//   helmet({
+//     contentSecurityPolicy: {
+//       directives: {
+//         "default-src": ["'self'"],
+//         "script-src": ["'self'", "https://cdn.jsdelivr.net"],
+//         "script-src-attr": ["'none'"], // Blocks inline event handlers
+//         // Add other sources as needed
+//       },
+//     },
+//   })
+// );
 
 app.use(compression());
 
