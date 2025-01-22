@@ -12,7 +12,9 @@ socket.on('receiveMessage', (data) => {
   if (data.groupId === currentGroupId) {
     const messagesContainer = document.getElementById('messages');
     const msgDiv = document.createElement('div');
-    msgDiv.classList.add('message', data.userId === data.currentUserId ? 'sent' : 'received');
+    const token = localStorage.getItem('token');
+    const { userId } = parseJwt(token);
+    msgDiv.classList.add('message', data.userId === userId ? 'sent' : 'received');
     msgDiv.textContent = data.message;
     messagesContainer.appendChild(msgDiv);
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
