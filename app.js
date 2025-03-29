@@ -4,7 +4,7 @@ const helmet = require('helmet');
 const cors = require('cors');
 const path = require('path');
 const bodyParser = require('body-parser');
-
+const sequelize = require('./util/database');
 const userRoutes = require('./routes/user.js');
 
 // Initialize Express app
