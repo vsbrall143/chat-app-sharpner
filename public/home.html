@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat - Chat App</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+
+
+  </head>
+  <body>
+    <!-- Header Section -->
+    <nav>
+      <div id="user-info" class="user-info"></div>  
+      <div class="logo">~ whatsapp ~</div>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="pendinginvites.html">invites</a></li>
+        <li><a href="#" onclick="showCreateGroupModal()" >create-group</a></li>
+        <li><a href="#" onclick="logout()" >logout</a></li>
+      </ul>
+      <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    </nav>
+  
+    <script>
+      const toggleMenu = () => {
+        const navLinks = document.querySelector('.nav-links');
+        navLinks.classList.toggle('show');
+      };
+    </script>
+
+    <!-- Chat Container -->
+    <div class="chat-container">
+      
+      <!-- <div class="pending-invites" id="pending-invites">
+        <h3>Pending Invitations</h3> 
+      </div> -->
+
+      <!-- Groups Section -->
+      <div class="groups" id="groups">
+        <h3>Your Groups</h3>
+        <!-- Dynamic group list will be appended here -->
+      </div>
+
+      <!-- Chat Window -->
+      <div class="chat-window">
+        <!-- Group Members Section -->
+        <div id="group-members" class="group-members">
+          <h3>Group Members</h3>
+          <ul id="members-list">
+            <!-- Members will be dynamically populated -->
+          </ul>
+        </div>
+
+        <!-- Messages Section -->
+        <div class="messages" id="messages">
+          <!-- Dynamic messages will be appended here -->
+        </div>
+
+        <!-- Send Box -->
+        <div class="send-box">
+          <input type="text" id="message-input" placeholder="Type a message" />
+          <button onclick="sendMessage()">Send</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal for Inviting Members -->
+    <div id="invite-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <span class="close" onclick="closeInviteModal()">&times;</span>
+        <h3>Invite to Group</h3>
+        <input
+          type="email"
+          id="invite-email-input"
+          placeholder="Enter user's email"
+        />
+        <button onclick="inviteToGroup()">Send Invite</button>
+      </div>
+    </div>
+
+    <!-- Modal for Group Creation -->
+    <div id="create-group-modal" class="modal" style="display: none;">
+      <div class="modal-content">
+        <span class="close" onclick="closeCreateGroupModal()">&times;</span>
+        <h3>Create Group</h3>
+        <input type="text" id="group-name-input" placeholder="Enter group name" />
+        <button onclick="createGroup()">Create</button>
+      </div>
+    </div>
+    <script type="module" src="./home.js"></script>
+ 
+    <!-- <script src="/js/axios.min.js"></script> -->
+
+    <script src="home.js" defer></script>
+  </body>
+</html>

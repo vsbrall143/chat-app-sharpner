@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat - Chat App</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jwt-decode/build/jwt-decode.min.js"></script>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+
+
+  </head>
+  <body>
+
+
+    <nav>
+      <div id="user-info" class="user-info"></div>  
+      <div class="logo">~ whatsapp ~</div>
+      <ul class="nav-links">
+        <li><a href="home.html">Home</a></li>
+        <li><a href="pendinginvites.html">invites</a></li>
+        <li><a href="#" onclick="showCreateGroupModal()" >create-group</a></li>
+        <li><a href="#" onclick="logout()" >logout</a></li>
+      </ul>
+      <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    </nav>
+  
+    <script>
+      const toggleMenu = () => {
+        const navLinks = document.querySelector('.nav-links');
+        navLinks.classList.toggle('show');
+      };
+    </script>
+
+
+<div class="pending-invites" id="pending-invites">
+    <h3>Pending Invitations</h3>
+    <!-- Dynamic list of invitations will be added here -->
+  </div>
+
+ 
+
+ 
+ 
+    <!-- <script src="/js/axios.min.js"></script> -->
+
+    <script src="home.js" defer></script>
+  </body>
+</html>
