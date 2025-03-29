@@ -13,16 +13,9 @@ const app = express();
 // Middleware
 app.use(
   helmet({
-    contentSecurityPolicy: {
-      directives: {
-        "default-src": ["'self'"],
-        "script-src": ["'self'", "https://cdn.jsdelivr.net", "https://cdn.socket.io"],
-        "script-src-attr": ["'self'", "'unsafe-inline'"], // Allow inline event handlers
-      },
-    },
+    contentSecurityPolicy: false // Disables CSP entirely
   })
 );
-
 app.use(compression());
 app.use(cors());
 
@@ -53,6 +46,14 @@ Message.belongsTo(Group, { foreignKey: 'groupId' });
 
 User.hasMany(Message, { foreignKey: 'userId' });
 Message.belongsTo(User, { foreignKey: 'userId' });
+
+
+// 🔹 Ensure Tables are Created Automatically
+sequelize.sync() //  Creates tables if they don't exist
+  .then(() => {
+    console.log('Database connected & tables synced!');
+  })
+  .catch(err => console.error(' Error syncing database:', err));
 
 // Export the app for use in server.js
 module.exports = app;
